@@ -1,36 +1,68 @@
 # CipherRoom Threat Model
 
-This CipherRoom is a chating system, that provides the complete end to end security with the private encryption that even the developer can't access the messages of other users. 
-
 ## Purpose
 
- ### 1. the purpose of cipherroom is just to secure the chat.
- ### 2. we use end to end encryption and the key would just share to the users who are chatting each other.
-...
+CipherRoom is a privacy-focused real-time messaging system.
+Its primary goal is to provide end-to-end encrypted private
+communication between authorized users.
 
 ## Privacy Goal
-1. we are trying to protect the conversations of the user to the another user.
-2. and trying to build a system where anyone can rely that the privacy of their messages are totally safe. 
-...
+
+The primary privacy goal is to prevent the CipherRoom server,
+database, and storage providers from accessing plaintext message
+contents or the cryptographic keys required to decrypt them.
 
 ## Server Can Access
 
-1. user's details like : name, email, password (hashed), is verified, creation and updation timing.
-2. the rooms details like : what's the room id, who are the users in that room, does the user able and authorized to access the room. 
-- ...
+- User identity information such as name and email
+- Password hashes
+- Email verification status
+- Account status
+- Authentication/session information
+- Room identifiers
+- Room membership
+- Invitation information
+- Authorization information
+- Operational metadata such as message timestamps and delivery status
+- Encrypted message ciphertext
+- Encrypted attachments
 
 ## Server Must Not Access
-1. the server should not excess the private and credential things of user, like password in plain text without hashing.
-2. the encryption key for the decryption of messages.
-3. the messages in plain text.
-- ...
+
+- Plaintext passwords as persistent data
+- Private encryption keys
+- Plaintext message contents
+- Plaintext image/file attachments
+- Keys required to decrypt private conversations
 
 ## Message Flow
 
-first the user would be insures that it is the authanticated -> then he write a message -> then the cipher encryptes it by using that key -> then it goes to the server and genereates a request to the server to save -> then the server take it and save to the database -> then send it to that user and where that encrypted message will be decrypted -> because that user have the encryption key. 
-...
+1. The user authenticates with CipherRoom.
+2. The user writes a message in the browser.
+3. The message is encrypted on the user's device.
+4. Only the resulting ciphertext is sent to the server.
+5. The server stores and/or relays the ciphertext.
+6. The recipient receives the ciphertext.
+7. The recipient's device decrypts the message locally.
 
 ## Attachment Flow
 
-before reaches the cloudinary, the image should have to be encrypted, because our whole aim is to get the user's conversation completely private, so the encryption of the image is also a thing to be consider for security. and a image could have too much data, so it should be encrypted first then reaches to the cloudinary and then cloudinary accept it as this, and stores to itself with encryption.
-...
+1. The user selects an attachment.
+2. The attachment is encrypted locally in the browser.
+3. The encrypted attachment is uploaded to storage.
+4. The server stores metadata/reference information.
+5. The recipient downloads the encrypted attachment.
+6. The recipient's browser decrypts it locally.
+
+## Threat Model Assumptions
+
+CipherRoom assumes that the user's device and browser are not
+compromised. End-to-end encryption protects message contents from
+the server and storage infrastructure, but cannot protect plaintext
+after it has been decrypted on a compromised device.
+
+## Metadata
+
+The server may have access to metadata required to operate the
+service, including room membership, timestamps, delivery information,
+and other operational information. Message content remains encrypted.
